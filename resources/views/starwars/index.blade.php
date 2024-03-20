@@ -28,39 +28,51 @@
 
 @section('scripts')
     <script>
-        document.getElementById("searchForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Prevent form submission
-            var searchInput = document.getElementById("searchInput");
-            var searchButton = document.getElementById("searchButton");
+        const searchForm = document.getElementById("searchForm");
+        const searchInput = document.getElementById("searchInput");
+        const searchButton = document.getElementById("searchButton");
+        const resultsBody = document.querySelector("#results tbody");
 
+        searchForm.addEventListener("submit", handleSubmit);
+
+        async function handleSubmit(event) {
+            event.preventDefault(); // Prevent form submission
+            const searchTerm = searchInput.value.trim();
+            if (searchTerm.length > 2) {
+                disableForm();
+                try {
+                    const data = await fetchResults(searchTerm);
+                    displayResults(data);
+                } catch (error) {
+                    handleError(error);
+                } finally {
+                    enableForm();
+                }
+            }
+        }
+
+        function disableForm() {
             searchInput.disabled = true;
             searchButton.disabled = true;
-            fetchResults(searchInput.value.trim());
-        });
+        }
 
-        function fetchResults(search) {
-            fetch("/starwars/search?search=" + search)
-                .then(response => response.json())
-                .then(data => {
-                    displayResults(data);
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                })
-                .finally(() => {
-                    var searchInput = document.getElementById("searchInput");
-                    var searchButton = document.getElementById("searchButton");
-                    searchInput.disabled = false;
-                    searchButton.disabled = false;
-                });
+        function enableForm() {
+            searchInput.disabled = false;
+            searchButton.disabled = false;
+        }
+
+        async function fetchResults(searchTerm) {
+            const response = await fetch(`/starwars/search?search=${searchTerm}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
+            }
+            return response.json();
         }
 
         function displayResults(data) {
-            var resultsBody = document.querySelector("#results tbody");
             resultsBody.innerHTML = "";
-
-            data.forEach(function(character) {
-                var row = document.createElement("tr");
+            data.forEach(character => {
+                const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${character.name}</td>
                     <td>${character.height}</td>
@@ -73,6 +85,10 @@
                 `;
                 resultsBody.appendChild(row);
             });
+        }
+
+        function handleError(error) {
+            console.error('Error fetching data:', error);
         }
     </script>
 @endsection
