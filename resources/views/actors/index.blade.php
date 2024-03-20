@@ -30,18 +30,13 @@
 @section('scripts')
     <script>
         document.getElementById("filterInput").addEventListener("input", function() {
-            var filter = this.value.toLowerCase();
-            var actors = document.getElementsByTagName("tr");
+            const filter = this.value.toLowerCase();
+            const actors = document.querySelectorAll("#actorsList tbody tr");
 
-            for (var i = 1; i < actors.length; i++) {
-                var actor = actors[i].getElementsByTagName("td")[0];
-
-                if (actor.innerHTML.toLowerCase().indexOf(filter) > -1) {
-                    actors[i].style.display = "";
-                } else {
-                    actors[i].style.display = "none";
-                }
-            }
+            actors.forEach(function(actor) {
+                const actorName = actor.querySelector("td:first-child").textContent.toLowerCase();
+                actor.style.display = actorName.includes(filter) ? "" : "none";
+            });
         });
     </script>
 @endsection
