@@ -26,3 +26,22 @@
         @endforeach
     </table>
 @endsection
+
+@section('scripts')
+    <script>
+        document.getElementById("filterInput").addEventListener("input", function() {
+            var filter = this.value.toLowerCase();
+            var actors = document.getElementsByTagName("tr");
+
+            for (var i = 1; i < actors.length; i++) {
+                var actor = actors[i].getElementsByTagName("td")[0];
+
+                if (actor.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                    actors[i].style.display = "";
+                } else {
+                    actors[i].style.display = "none";
+                }
+            }
+        });
+    </script>
+@endsection
