@@ -21,3 +21,4 @@ Route::get('/', function () {
 
 Route::get('/actors', [ActorController::class, 'index']);
 Route::get('/starwars', [StarWarsController::class, 'index']);
+Route::get('/starwars/search', [StarWarsController::class, 'search']);
