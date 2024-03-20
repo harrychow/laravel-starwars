@@ -15,10 +15,7 @@ use App\Http\Controllers\StarWarsController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
+Route::get('/', [ActorController::class, 'index']);
 Route::get('/actors', [ActorController::class, 'index']);
 Route::get('/starwars', [StarWarsController::class, 'index']);
 Route::get('/starwars/search', [StarWarsController::class, 'search']);
