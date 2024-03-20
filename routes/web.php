@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ActorController;
+use App\Http\Controllers\StarWarsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,3 +20,4 @@ Route::get('/', function () {
 });
 
 Route::get('/actors', [ActorController::class, 'index']);
+Route::get('/starwars', [StarWarsController::class, 'index']);
